@@ -6,7 +6,7 @@
 <title>VESTA · Az — Interior Design Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root {
   --ink:#1A1614; --ink2:#352C26; --cream:#F5F0E8; --cream2:#EDE5D6; --cream3:#E4D9C8;
@@ -1245,14 +1245,20 @@ document.addEventListener('pointerdown', e => {
 // Orchestration
 async function orchestrate() {
   if(!prods.length){ showToast('请先上传家具图'); return; }
-  document.querySelectorAll('.canvas-item').forEach(el=>el.classList.remove('active'));
-  const cvs = document.getElementById('renderCanvas');
-  const layout = await html2canvas(cvs,{scale:1.5,useCORS:true});
-  dlCanvas(layout,'1_Layout_Reference.png');
-  await buildSpriteSheet();
-  const prompt = buildPrompt();
-  document.getElementById('finalPromptText').textContent = prompt;
-  document.getElementById('promptModal').classList.add('on');
+  try {
+    document.querySelectorAll('.canvas-item').forEach(el=>el.classList.remove('active'));
+    document.querySelectorAll('.bg-item').forEach(el=>el.classList.remove('active'));
+    const cvs = document.getElementById('renderCanvas');
+    const layout = await html2canvas(cvs,{scale:1.5,useCORS:true,allowTaint:true});
+    dlCanvas(layout,'1_Layout_Reference.png');
+    await buildSpriteSheet();
+    const prompt = buildPrompt();
+    document.getElementById('finalPromptText').textContent = prompt;
+    document.getElementById('promptModal').classList.add('on');
+  } catch(err) {
+    showToast('生成失败：' + err.message);
+    console.error(err);
+  }
 }
 
 function dlCanvas(canvas, name) {
@@ -1293,7 +1299,7 @@ async function buildSpriteSheet() {
 function buildPrompt() {
   const style = document.getElementById('envStyle').value;
   const room = document.getElementById('envRoom').value;
-  const hasBg = document.getElementById('canvasBgImg').style.display !== 'none';
+  const hasBg = !!document.getElementById('bg-canvas-item');
   let rules = '';
 
   prods.forEach((p,idx) => {
