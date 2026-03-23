@@ -331,11 +331,11 @@ header{height:54px;background:var(--ink);display:flex;align-items:center;justify
 <div class="mod-panel on" id="mod-a">
 
   <div class="stepnav">
-    <div class="sn active" id="sn0"><div class="sn-dot">1</div><div class="sn-label">上传图片</div></div>
+    <div class="sn active" id="sn0" onclick="goTo(0)"><div class="sn-dot">1</div><div class="sn-label">上传图片</div></div>
     <div class="sn-sep"></div>
-    <div class="sn" id="sn1"><div class="sn-dot">2</div><div class="sn-label">设置 & 生成</div></div>
+    <div class="sn" id="sn1" onclick="goTo(1)"><div class="sn-dot">2</div><div class="sn-label">设置 & 生成</div></div>
     <div class="sn-sep"></div>
-    <div class="sn" id="sn2"><div class="sn-dot">3</div><div class="sn-label">迭代修正</div></div>
+    <div class="sn" id="sn2" onclick="goTo(2)"><div class="sn-dot">3</div><div class="sn-label">迭代修正</div></div>
   </div>
 
   <div class="main-a">
@@ -736,6 +736,8 @@ function goTo(n) {
   document.querySelectorAll('.sn').forEach((s,i) => {
     s.classList.toggle('active', i === n);
     s.classList.toggle('done', i < n);
+    // Always allow click navigation
+    s.style.cursor = 'pointer';
   });
 }
 
@@ -826,17 +828,24 @@ ${note ? '补充说明：' + note : ''}
 - Do not alter room footprint, camera angle or spatial proportions`;
 }
 
-// Bridge: send ref image to moodboard as background
+// Bridge: upload Gemini result and send to moodboard
 function sendToMoodboard() {
-  const refThumb = document.getElementById('refThumb');
-  if (!refThumb.src || refThumb.style.display === 'none') {
-    showToast('请先上传参考图');
-    return;
-  }
-  // Set bridge bg
-  setBridgeBg(refThumb.src, '硬装参考图');
-  switchMod('b');
-  showToast('✓ 硬装参考图已传入软装模块');
+  // Trigger file picker for the Gemini-generated room image
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      setBridgeBg(ev.target.result, 'Gemini 硬装效果图');
+      switchMod('b');
+      showToast('✓ 硬装效果图已传入软装模块');
+    };
+    r.readAsDataURL(f);
+  };
+  input.click();
 }
 
 const FIXES = {
@@ -897,9 +906,13 @@ function rebuildSelects() {
   ['style','room'].forEach(type => {
     const sel = document.getElementById(type === 'style' ? 'envStyle' : 'envRoom');
     const cur = sel.value;
-    sel.innerHTML = envData[type].map(item =>
-      `<option value="${escHtml(item.prompt)}">${escHtml(item.name)}</option>`
-    ).join('');
+    sel.innerHTML = '';
+    envData[type].forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.prompt;      // set via property, no escaping needed
+      opt.textContent = item.name;  // set via property, safe
+      sel.appendChild(opt);
+    });
     // Try to restore selection
     if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
   });
