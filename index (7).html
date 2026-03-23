@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VESTA · Az — Interior Design Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+:root {
+  --ink:#1A1614; --ink2:#352C26; --cream:#F5F0E8; --cream2:#EDE5D6; --cream3:#E4D9C8;
+  --stone:#B0A394; --taupe:#857568; --accent:#A87048; --accent2:#C8926A;
+  --surface:#FDFAF5; --border:rgba(133,117,104,0.16); --border2:rgba(133,117,104,0.28);
+  --green:#4A7A58; --red:#9C2E2E; --red-bg:#FBF0F0;
+  --radius:6px; --radius-lg:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;font-weight:300;font-size:14px;}
+
+/* ── HEADER ── */
+header{height:54px;background:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 36px;position:sticky;top:0;z-index:200;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);font-weight:300;letter-spacing:.06em;}
+.logo em{color:#C8926A;font-style:italic;}
+.logo-sub{font-size:11px;color:rgba(200,146,106,.6);letter-spacing:.12em;margin-left:14px;}
+
+/* ── MODULE TABS ── */
+.mod-tabs{display:flex;background:var(--ink2);padding:0 36px;gap:2px;}
+.mtab{display:flex;align-items:center;gap:8px;padding:12px 24px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.4);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:400;}
+.mtab:hover{color:rgba(245,240,232,.7);}
+.mtab.on{color:var(--accent2);border-bottom-color:var(--accent2);}
+.mtab-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6;}
+.pipeline-arrow{display:flex;align-items:center;padding:0 8px;color:rgba(200,146,106,.3);font-size:16px;align-self:center;}
+
+/* ── MODULE PANELS ── */
+.mod-panel{display:none;}
+.mod-panel.on{display:block;}
+
+/* ══════════════════════════════════
+   MODULE A — HARD DECO
+══════════════════════════════════ */
+/* STEP NAV */
+.stepnav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 36px;}
+.sn{display:flex;align-items:center;gap:8px;padding:14px 28px 14px 0;opacity:.35;transition:opacity .2s;position:relative;cursor:default;}
+.sn.active{opacity:1;}
+.sn.done{opacity:.6;cursor:pointer;}
+.sn.done:hover{opacity:.8;}
+.sn::after{content:'';position:absolute;bottom:0;left:0;right:28px;height:2px;}
+.sn.active::after{background:var(--accent);}
+.sn-dot{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--stone);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--stone);flex-shrink:0;transition:all .2s;}
+.sn.active .sn-dot{border-color:var(--accent);color:var(--accent);}
+.sn.done .sn-dot{background:var(--green);border-color:var(--green);color:white;font-size:10px;}
+.sn-label{font-size:12px;color:var(--taupe);white-space:nowrap;}
+.sn.active .sn-label{color:var(--ink);font-weight:400;}
+.sn-sep{width:28px;height:1px;background:var(--border2);align-self:center;flex-shrink:0;}
+
+.main-a{max-width:960px;margin:0 auto;padding:36px 36px 100px;}
+.page{display:none;animation:fi .22s ease;}
+.page.active{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.slabel{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--taupe);margin-bottom:12px;font-weight:400;}
+.info{background:rgba(168,112,72,.07);border:1px solid rgba(168,112,72,.2);border-radius:4px;padding:12px 16px;font-size:12.5px;color:var(--taupe);line-height:1.75;margin-bottom:24px;}
+.info strong{color:var(--accent);}
+
+/* UPLOAD */
+.upload-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.ucard{border:1px solid var(--border);border-radius:6px;overflow:hidden;background:var(--surface);}
+.uhead{padding:11px 16px;border-bottom:1px solid var(--border);background:var(--cream2);display:flex;align-items:center;gap:8px;}
+.ubadge{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;}
+.uname{font-size:13px;font-weight:500;}
+.uhint{font-size:11px;color:var(--taupe);margin-left:auto;}
+.dropzone{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;background:var(--cream);padding:22px;transition:background .2s;text-align:center;}
+.dropzone:hover{background:rgba(168,112,72,.04);}
+.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.dropzone img.thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
+.dz-ov{position:absolute;inset:0;background:rgba(26,22,20,.42);display:none;align-items:center;justify-content:center;font-size:11px;color:white;letter-spacing:.1em;text-transform:uppercase;}
+.dropzone:hover .dz-ov.on{display:flex;}
+.dz-icon{opacity:.25;margin-bottom:9px;}
+.dz-title{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:300;color:var(--ink2);margin-bottom:3px;}
+.dz-sub{font-size:11px;color:var(--stone);}
+.dz-ok{font-size:11px;color:var(--green);margin-top:6px;font-weight:400;}
+
+/* SETTINGS */
+.settings-row{display:grid;grid-template-columns:160px 1fr;gap:14px;margin-bottom:22px;}
+.field label{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--taupe);margin-bottom:7px;}
+.field select,.field textarea{width:100%;border:1px solid var(--border);background:var(--cream);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink2);font-weight:300;outline:none;transition:border-color .2s;}
+.field select{height:40px;cursor:pointer;}
+.field select:focus,.field textarea:focus{border-color:var(--accent);}
+.field textarea{resize:none;}
+
+/* PILLS */
+.pill-wrap{margin-bottom:24px;}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.pill{border:1px solid var(--border2);border-radius:20px;padding:4px 13px;font-size:12px;color:var(--taupe);cursor:pointer;transition:all .18s;background:transparent;}
+.pill:hover{border-color:var(--accent);color:var(--accent);}
+.pill.on{background:var(--accent);border-color:var(--accent);color:white;}
+.spill{border:1px solid var(--border2);border-radius:20px;padding:4px 13px;font-size:12px;color:var(--taupe);cursor:pointer;transition:all .18s;background:transparent;}
+.spill:hover{border-color:var(--red);color:var(--red);}
+.spill.on{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+
+/* CTA */
+.cta-row{display:flex;justify-content:flex-end;gap:10px;margin-top:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;cursor:pointer;transition:all .2s;letter-spacing:.03em;border:none;}
+.btn-pri{background:var(--ink);color:var(--cream);}
+.btn-pri:hover{background:var(--ink2);}
+.btn-sec{background:transparent;color:var(--taupe);border:1px solid var(--border2);}
+.btn-sec:hover{border-color:var(--taupe);color:var(--ink2);}
+.btn-accent{background:var(--accent);color:white;border:none;}
+.btn-accent:hover{background:var(--ink);}
+
+/* OUTPUT */
+.out-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:20px;}
+.out-head{background:var(--ink);padding:15px 22px;display:flex;align-items:center;justify-content:space-between;}
+.out-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);font-weight:300;letter-spacing:.04em;}
+.out-tag{font-size:10px;background:rgba(200,146,106,.2);color:var(--accent2);padding:2px 9px;border-radius:20px;letter-spacing:.08em;}
+.out-body{padding:20px 22px;}
+.plabel{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;font-weight:400;}
+.pbox{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:16px;font-size:12.5px;line-height:2;color:var(--ink2);white-space:pre-wrap;font-weight:300;max-height:480px;overflow-y:auto;}
+.copy-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;}
+.cbtn{padding:8px 17px;border-radius:3px;font-size:12px;letter-spacing:.05em;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:400;transition:all .18s;}
+.cbtn.p{background:var(--accent);color:white;border:1px solid var(--accent);}
+.cbtn.p:hover{background:var(--ink);}
+.cbtn.s{background:transparent;color:var(--taupe);border:1px solid var(--border2);}
+.cbtn.s:hover{border-color:var(--taupe);}
+.cbtn.g{background:var(--green);color:white;border:1px solid var(--green);}
+.cbtn.g:hover{background:#3a6047;}
+
+/* HOWTO */
+.howto{background:var(--cream2);border-radius:4px;padding:16px 18px;margin-top:16px;}
+.ht-title{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);margin-bottom:12px;}
+.ht-steps{display:flex;flex-direction:column;gap:10px;}
+.hs{display:flex;gap:10px;align-items:flex-start;}
+.hs-n{width:20px;height:20px;border-radius:50%;background:var(--accent);color:white;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.hs-t{font-size:12.5px;color:var(--ink2);line-height:1.7;}
+.hs-code{font-family:monospace;font-size:11px;background:var(--surface);border:1px solid var(--border);border-left:2px solid var(--accent);border-radius:0 3px 3px 0;padding:8px 12px;margin-top:6px;color:var(--taupe);line-height:1.7;}
+
+/* CORRECTIONS */
+.corr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.ci{border:1px solid var(--border);border-radius:4px;padding:11px 13px;cursor:pointer;transition:all .18s;background:var(--cream);}
+.ci:hover{border-color:var(--accent);}
+.ci.on{border-color:var(--red);background:var(--red-bg);}
+.ci-icon{font-size:15px;margin-bottom:4px;}
+.ci-name{font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:2px;}
+.ci.on .ci-name{color:var(--red);}
+.ci-desc{font-size:11px;color:var(--taupe);line-height:1.4;}
+.corr-out{display:none;}
+.corr-out.show{display:block;}
+.divider{height:1px;background:var(--border);margin:28px 0;}
+
+/* ══════════════════════════════════
+   MODULE B — SOFT FURNISHING
+══════════════════════════════════ */
+.main-b{display:grid;grid-template-columns:400px 1fr;gap:24px;padding:24px 36px;max-width:1400px;margin:0 auto;align-items:start;}
+
+/* Control Panel */
+.ctrl-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;display:flex;flex-direction:column;gap:20px;box-shadow:0 4px 20px rgba(0,0,0,0.03);}
+.sec-title{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--taupe);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Asset Upload */
+.asset-zone{border:1px dashed var(--border2);border-radius:var(--radius);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--cream);}
+.asset-zone:hover{border-color:var(--accent);background:rgba(168,112,72,.04);}
+.asset-zone p{font-size:12px;color:var(--taupe);margin-top:6px;}
+
+/* Background Room Upload */
+.bg-zone{border:1px dashed var(--border2);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s;position:relative;background:var(--cream);}
+.bg-zone:hover{border-color:var(--accent);}
+.bg-zone-inner{padding:18px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bg-zone-inner p{font-size:12px;color:var(--taupe);}
+.bg-zone-inner .hint{font-size:10px;color:var(--stone);}
+.bg-preview-row{display:none;align-items:center;gap:10px;padding:10px 12px;background:rgba(74,122,88,.06);border-top:1px solid var(--border);}
+.bg-preview-row img{width:52px;height:36px;object-fit:cover;border-radius:3px;border:1px solid var(--border);}
+.bg-preview-row span{font-size:11px;color:var(--taupe);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bg-use-btn{font-size:11px;padding:4px 10px;border-radius:3px;background:var(--green);color:white;border:none;cursor:pointer;white-space:nowrap;}
+.bg-rm-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:16px;opacity:.6;padding:0 4px;}
+
+/* Product List */
+.prod-list{display:flex;flex-direction:column;gap:7px;max-height:220px;overflow-y:auto;padding-right:2px;}
+.prod-item{display:flex;align-items:center;gap:10px;padding:7px 8px;border:1px solid var(--border);border-radius:var(--radius);background:white;}
+.prod-item img{width:38px;height:38px;object-fit:contain;background:white;border-radius:3px;border:1px solid #EEE;flex-shrink:0;}
+.prod-meta{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.prod-meta input{border:none;background:transparent;font-size:12px;color:var(--ink);outline:none;width:100%;font-family:'DM Sans',sans-serif;font-weight:300;}
+.prod-meta select{border:none;background:transparent;font-size:10px;color:var(--taupe);outline:none;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0;}
+.prod-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;padding:0 6px;opacity:.4;transition:opacity .2s;flex-shrink:0;}
+.prod-item:hover .prod-del{opacity:1;}
+
+/* Form */
+.fgroup{display:flex;flex-direction:column;gap:5px;}
+.fgroup label{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--taupe);}
+.fgroup select{padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;background:var(--cream);color:var(--ink2);}
+.fgroup select:focus{border-color:var(--accent);}
+
+/* Magic Button */
+.magic-btn{background:var(--ink);color:var(--cream);border:none;padding:14px;border-radius:var(--radius);font-size:13px;font-weight:400;letter-spacing:.05em;cursor:pointer;transition:all .2s;display:flex;justify-content:center;align-items:center;gap:8px;box-shadow:0 6px 18px rgba(26,22,20,.18);margin-top:8px;}
+.magic-btn:hover{background:var(--ink2);transform:translateY(-1px);}
+
+/* Canvas */
+.canvas-container{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.canvas-header{width:540px;display:flex;justify-content:space-between;align-items:flex-end;}
+.canvas-header h3{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;}
+.canvas-header p{font-size:11px;color:var(--taupe);margin-top:2px;}
+.canvas-dim{font-size:10px;padding:3px 8px;background:var(--cream2);border-radius:3px;color:var(--ink2);}
+
+.canvas-wrap{position:relative;width:540px;height:720px;background:linear-gradient(160deg,#F8F6F0 0%,#EAE5D9 100%);box-shadow:0 16px 50px rgba(0,0,0,0.08);overflow:hidden;border:1px solid var(--border);}
+.canvas-grid-layer{position:absolute;inset:0;background-image:linear-gradient(rgba(0,0,0,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.025) 1px,transparent 1px);background-size:54px 54px;z-index:2;pointer-events:none;}
+/* Draggable background item */
+.bg-item{position:absolute;z-index:3;touch-action:none;user-select:none;cursor:move;}
+.bg-item img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;}
+.bg-item.active{outline:2px dashed rgba(168,112,72,.6);outline-offset:2px;}
+.bg-resize-handle{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:var(--taupe);border:2px solid white;border-radius:50%;cursor:nwse-resize;display:none;z-index:20;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+.bg-item.active .bg-resize-handle{display:block;}
+.bg-item-label{position:absolute;top:4px;left:4px;font-size:9px;background:rgba(26,22,20,.55);color:white;padding:2px 6px;border-radius:2px;letter-spacing:.06em;pointer-events:none;}
+
+/* Canvas Items */
+.canvas-item{position:absolute;z-index:10;display:flex;align-items:center;justify-content:center;touch-action:none;user-select:none;}
+.canvas-item img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.14));}
+.canvas-item.active{outline:2px dashed var(--accent);outline-offset:3px;}
+.resize-handle{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:var(--accent);border:2px solid white;border-radius:50%;cursor:nwse-resize;display:none;z-index:20;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
+.canvas-item.active .resize-handle{display:block;}
+
+/* Prompt Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;display:none;justify-content:center;align-items:center;padding:40px;}
+.modal-overlay.on{display:flex;}
+.modal-box{background:white;width:100%;max-width:780px;max-height:88vh;border-radius:var(--radius-lg);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.18);}
+.modal-hd{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--cream2);}
+.modal-hd h2{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink2);}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--taupe);}
+.modal-body{padding:22px;overflow-y:auto;flex:1;}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+.prompt-box{background:#FAFAF8;border:1px solid var(--border);border-radius:var(--radius);padding:18px;font-family:monospace;font-size:11.5px;line-height:1.7;color:#333;white-space:pre-wrap;user-select:all;}
+
+/* Canvas Size Presets */
+.size-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px;}
+.size-pill{border:1px solid var(--border2);border-radius:4px;padding:6px 4px;text-align:center;cursor:pointer;transition:all .18s;background:transparent;}
+.size-pill:hover{border-color:var(--accent);color:var(--accent);}
+.size-pill.on{background:var(--accent);border-color:var(--accent);color:white;}
+.size-pill-name{font-size:11px;font-weight:500;line-height:1.2;}
+.size-pill-ratio{font-size:9px;opacity:.7;margin-top:1px;}
+.custom-size-row{display:flex;align-items:center;gap:6px;margin-top:6px;}
+.custom-size-row input{flex:1;border:1px solid var(--border);border-radius:4px;padding:7px 9px;font-size:12px;font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink2);outline:none;text-align:center;}
+.custom-size-row input:focus{border-color:var(--accent);}
+.custom-size-row span{font-size:12px;color:var(--taupe);flex-shrink:0;}
+.custom-apply-btn{padding:7px 12px;border-radius:4px;background:var(--ink);color:white;border:none;font-size:11px;cursor:pointer;white-space:nowrap;}
+.custom-apply-btn:hover{background:var(--ink2);}
+
+/* Env Edit Button */
+.env-edit-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:3px;border:1px solid var(--border2);background:transparent;font-size:10px;color:var(--taupe);cursor:pointer;letter-spacing:.04em;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.env-edit-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Env Editor Modal */
+.env-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:3000;display:none;justify-content:center;align-items:center;padding:40px;}
+.env-modal.on{display:flex;}
+.env-modal-box{background:white;width:100%;max-width:520px;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.env-modal-hd{padding:16px 20px;background:var(--ink);display:flex;align-items:center;justify-content:space-between;}
+.env-modal-hd h3{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);font-weight:300;}
+.env-modal-close{background:none;border:none;color:rgba(245,240,232,.5);font-size:20px;cursor:pointer;}
+.env-modal-close:hover{color:var(--cream);}
+.env-item-list{padding:16px 20px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;}
+.env-item{border:1px solid var(--border);border-radius:5px;overflow:hidden;transition:border-color .15s;}
+.env-item:hover{border-color:var(--border2);}
+.env-item-head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--cream);cursor:pointer;}
+.env-item-head:hover{background:var(--cream2);}
+.env-item-name{font-size:12px;font-weight:500;color:var(--ink2);flex:1;}
+.env-item-actions{display:flex;gap:4px;}
+.env-ia{background:none;border:none;font-size:11px;padding:3px 6px;border-radius:3px;cursor:pointer;color:var(--taupe);transition:all .15s;}
+.env-ia:hover{background:var(--cream3);}
+.env-ia.del:hover{color:var(--red);background:var(--red-bg);}
+.env-item-body{display:none;padding:8px 10px;border-top:1px solid var(--border);background:white;}
+.env-item-body.open{display:block;}
+.env-item-body input{width:100%;border:1px solid var(--border);border-radius:3px;padding:6px 9px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--ink2);outline:none;margin-bottom:5px;}
+.env-item-body textarea{width:100%;border:1px solid var(--border);border-radius:3px;padding:6px 9px;font-size:11px;font-family:monospace;color:var(--taupe);outline:none;resize:vertical;min-height:56px;line-height:1.5;}
+.env-item-body input:focus,.env-item-body textarea:focus{border-color:var(--accent);}
+.env-item-save{font-size:11px;padding:4px 10px;background:var(--accent);color:white;border:none;border-radius:3px;cursor:pointer;margin-top:4px;}
+.env-add-row{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.env-add-row input{flex:1;border:1px solid var(--border);border-radius:4px;padding:8px 10px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;background:var(--cream);}
+.env-add-row input:focus{border-color:var(--accent);}
+.env-add-btn{padding:8px 14px;background:var(--ink);color:white;border:none;border-radius:4px;font-size:12px;cursor:pointer;white-space:nowrap;}
+
+/* Toast */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--ink);color:var(--cream);padding:9px 18px;border-radius:3px;font-size:12px;letter-spacing:.04em;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* Bridge Banner */
+.bridge-banner{background:linear-gradient(135deg,rgba(74,122,88,.12),rgba(168,112,72,.08));border:1px solid rgba(74,122,88,.2);border-radius:6px;padding:14px 18px;display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.bridge-thumb{width:56px;height:40px;object-fit:cover;border-radius:3px;border:1px solid rgba(74,122,88,.2);display:none;flex-shrink:0;}
+.bridge-thumb.show{display:block;}
+.bridge-text{flex:1;}
+.bridge-text strong{font-size:13px;color:var(--green);font-weight:500;}
+.bridge-text p{font-size:11px;color:var(--taupe);margin-top:2px;}
+.bridge-clear{background:none;border:none;font-size:18px;color:var(--taupe);cursor:pointer;opacity:.5;}
+
+#spriteCanvas{display:none;}
+
+@media(max-width:960px){
+  .main-b{grid-template-columns:1fr;}
+  .upload-pair,.settings-row,.corr-grid{grid-template-columns:1fr;}
+  .main-a{padding:24px 20px 80px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:baseline;gap:4px;">
+    <div class="logo">VES<em>TA</em></div>
+    <div class="logo-sub">Interior Design Studio</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="font-size:10px;color:rgba(200,146,106,.4);letter-spacing:.1em;">by <span style="color:var(--accent2);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:300;">Az</span></div>
+    <div style="font-size:10px;background:rgba(200,146,106,.15);color:var(--accent2);padding:3px 10px;border-radius:20px;letter-spacing:.08em;">v5.0</div>
+  </div>
+</header>
+
+<!-- MODULE TABS -->
+<div class="mod-tabs">
+  <div class="mtab on" onclick="switchMod('a')" id="mtab-a">
+    <div class="mtab-dot"></div>
+    硬装空间 · HardDeco
+  </div>
+  <div class="pipeline-arrow">→</div>
+  <div class="mtab" onclick="switchMod('b')" id="mtab-b">
+    <div class="mtab-dot"></div>
+    软装陈设 · Moodboard
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     MODULE A: HARD DECO STUDIO
+══════════════════════════════════ -->
+<div class="mod-panel on" id="mod-a">
+
+  <div class="stepnav">
+    <div class="sn active" id="sn0"><div class="sn-dot">1</div><div class="sn-label">上传图片</div></div>
+    <div class="sn-sep"></div>
+    <div class="sn" id="sn1"><div class="sn-dot">2</div><div class="sn-label">设置 & 生成</div></div>
+    <div class="sn-sep"></div>
+    <div class="sn" id="sn2"><div class="sn-dot">3</div><div class="sn-label">迭代修正</div></div>
+  </div>
+
+  <div class="main-a">
+
+    <!-- PAGE 0: UPLOAD -->
+    <div class="page active" id="p0">
+      <div class="info">
+        <strong>工作流：</strong> 上传参考图 + 毛坯房照片 → 生成发给 Claude 的分析指令 → Claude 识别空间洞口并锁定布局 → 输出 Gemini 提示词 → 效果满意后将空间图传入软装模块继续搭配
+      </div>
+      <div class="slabel">上传图片</div>
+      <div class="upload-pair">
+        <div class="ucard">
+          <div class="uhead">
+            <div class="ubadge" style="background:#FAEEDA;color:#854F0B">①</div>
+            <div class="uname">硬装参考图</div>
+            <div class="uhint">目标风格</div>
+          </div>
+          <div class="dropzone" id="refZone">
+            <input type="file" id="refInput" accept="image/*">
+            <img class="thumb" id="refThumb" alt="">
+            <div class="dz-ov" id="refOv">更换图片</div>
+            <svg class="dz-icon" width="34" height="34" viewBox="0 0 34 34" fill="none"><rect x="2" y="6" width="30" height="22" rx="3" stroke="#857568" stroke-width="1.2"/><circle cx="11" cy="14" r="3.2" stroke="#857568" stroke-width="1.2"/><path d="M2 23L10 16L16 22L22 15L32 23" stroke="#857568" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <div class="dz-title">拖入参考图</div>
+            <div class="dz-sub">室内设计图 · 小红书截图</div>
+            <div class="dz-ok" id="refOk"></div>
+          </div>
+        </div>
+        <div class="ucard">
+          <div class="uhead">
+            <div class="ubadge" style="background:#E1F5EE;color:#0F6E56">②</div>
+            <div class="uname">毛坯房照片</div>
+            <div class="uhint">实际空间</div>
+          </div>
+          <div class="dropzone" id="bareZone">
+            <input type="file" id="bareInput" accept="image/*">
+            <img class="thumb" id="bareThumb" alt="">
+            <div class="dz-ov" id="bareOv">更换图片</div>
+            <svg class="dz-icon" width="34" height="34" viewBox="0 0 34 34" fill="none"><path d="M3 28V13L17 3L31 13V28" stroke="#857568" stroke-width="1.2" stroke-linejoin="round"/><rect x="12" y="18" width="10" height="10" rx="1" stroke="#857568" stroke-width="1.2"/></svg>
+            <div class="dz-title">拖入毛坯房</div>
+            <div class="dz-sub">正面广角，含地面天花最佳</div>
+            <div class="dz-ok" id="bareOk"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cta-row">
+        <button class="btn btn-pri" onclick="goTo(1)">下一步：设置 →</button>
+      </div>
+    </div>
+
+    <!-- PAGE 1: SETTINGS + GENERATE -->
+    <div class="page" id="p1">
+      <div class="slabel">基本信息</div>
+      <div class="settings-row">
+        <div class="field">
+          <label>空间类型</label>
+          <select id="roomType">
+            <option>客厅</option><option>餐厅</option><option>主卧</option>
+            <option>书房</option><option>玄关</option><option>走廊</option><option>卫生间</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>补充说明（可选）</label>
+          <textarea id="extraNote" placeholder="例如：高层南向，约55㎡，层高约2.9m…" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="pill-wrap">
+        <div class="slabel">重点关注部位</div>
+        <div class="pills">
+          <div class="pill on" onclick="this.classList.toggle('on')">地面</div>
+          <div class="pill on" onclick="this.classList.toggle('on')">背景墙</div>
+          <div class="pill on" onclick="this.classList.toggle('on')">天花板</div>
+          <div class="pill on" onclick="this.classList.toggle('on')">踢脚线</div>
+          <div class="pill" onclick="this.classList.toggle('on')">灯具</div>
+          <div class="pill" onclick="this.classList.toggle('on')">窗帘</div>
+          <div class="pill" onclick="this.classList.toggle('on')">结构柱</div>
+        </div>
+      </div>
+
+      <div class="pill-wrap">
+        <div class="slabel">特殊结构（勾选存在的情况）</div>
+        <div class="pills">
+          <div class="spill" onclick="this.classList.toggle('on')" data-v="beam">门洞上方有横梁</div>
+          <div class="spill" onclick="this.classList.toggle('on')" data-v="column">有独立结构柱</div>
+          <div class="spill" onclick="this.classList.toggle('on')" data-v="step">地面有高差</div>
+          <div class="spill" onclick="this.classList.toggle('on')" data-v="low">层高偏低(&lt;2.7m)</div>
+          <div class="spill" onclick="this.classList.toggle('on')" data-v="beam_balcony">阳台连接处有横梁</div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn btn-sec" onclick="goTo(0)">← 返回</button>
+        <button class="btn btn-pri" id="genBtn" onclick="generateHard()">✦ 生成分析指令</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="out-card" id="outCard" style="display:none">
+        <div class="out-head">
+          <div class="out-title">分析指令已生成</div>
+          <div class="out-tag">发给 Claude</div>
+        </div>
+        <div class="out-body">
+          <div class="plabel">把以下指令 + 两张图发给 Claude</div>
+          <div class="pbox" id="instrBox"></div>
+          <div class="copy-row">
+            <button class="cbtn p" onclick="copyInstr()">📋 复制分析指令</button>
+            <button class="cbtn s" onclick="goTo(2)">效果不满意？→ 迭代修正</button>
+            <button class="cbtn g" onclick="sendToMoodboard()">✓ 效果满意，传入软装模块 →</button>
+          </div>
+          <div class="howto">
+            <div class="ht-title">使用步骤</div>
+            <div class="ht-steps">
+              <div class="hs"><div class="hs-n">1</div><div class="hs-t">复制上方分析指令</div></div>
+              <div class="hs"><div class="hs-n">2</div><div class="hs-t">打开 <strong>Claude 新对话</strong>，同时上传 <strong>①参考图 + ②毛坯房照片</strong>，粘贴指令发送</div></div>
+              <div class="hs"><div class="hs-n">3</div><div class="hs-t">Claude 返回完整 Gemini 英文提示词（含自动识别的洞口清单和空间锁定）</div></div>
+              <div class="hs"><div class="hs-n">4</div><div class="hs-t">打开 <strong>Gemini 2.0 Pro</strong>，只上传毛坯房照片，粘贴提示词发送，得到空间效果图</div></div>
+              <div class="hs"><div class="hs-n">5</div><div class="hs-t"><strong>满意后</strong>，点击「传入软装模块」，将该空间图作为软装搭配的背景</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: CORRECTIONS -->
+    <div class="page" id="p2">
+      <div class="info" style="margin-bottom:20px;">勾选 Gemini 出图中存在的问题，自动生成可直接追加到对话的修正段落。</div>
+      <div class="slabel">问题诊断</div>
+      <div class="corr-grid">
+        <div class="ci" data-k="extra_wall" onclick="this.classList.toggle('on')"><div class="ci-icon">🧱</div><div class="ci-name">多了墙面</div><div class="ci-desc">AI 凭空添加了不存在的墙</div></div>
+        <div class="ci" data-k="extra_door" onclick="this.classList.toggle('on')"><div class="ci-icon">🚪</div><div class="ci-name">多了门洞</div><div class="ci-desc">出现了毛坯房没有的门</div></div>
+        <div class="ci" data-k="extra_window" onclick="this.classList.toggle('on')"><div class="ci-icon">🪟</div><div class="ci-name">多了窗户</div><div class="ci-desc">新增了不该有的窗口</div></div>
+        <div class="ci" data-k="layout_changed" onclick="this.classList.toggle('on')"><div class="ci-icon">📐</div><div class="ci-name">布局变形</div><div class="ci-desc">空间结构、视角被修改</div></div>
+        <div class="ci" data-k="color_cold" onclick="this.classList.toggle('on')"><div class="ci-icon">🎨</div><div class="ci-name">颜色偏冷</div><div class="ci-desc">整体色调偏灰蓝，不够暖</div></div>
+        <div class="ci" data-k="panel_low" onclick="this.classList.toggle('on')"><div class="ci-icon">📏</div><div class="ci-name">护墙板过低</div><div class="ci-desc">下墙板高度不足900mm</div></div>
+        <div class="ci" data-k="molding_thin" onclick="this.classList.toggle('on')"><div class="ci-icon">〰️</div><div class="ci-name">线条太薄</div><div class="ci-desc">角线/门套缺乏立体感</div></div>
+        <div class="ci" data-k="window_wrong" onclick="this.classList.toggle('on')"><div class="ci-icon">🔲</div><div class="ci-name">窗型不对</div><div class="ci-desc">窗框样式与参考图不符</div></div>
+        <div class="ci" data-k="beam_visible" onclick="this.classList.toggle('on')"><div class="ci-icon">⬛</div><div class="ci-name">横梁暴露</div><div class="ci-desc">门洞上方横梁未被处理</div></div>
+        <div class="ci" data-k="chandelier_wrong" onclick="this.classList.toggle('on')"><div class="ci-icon">💡</div><div class="ci-name">吊灯问题</div><div class="ci-desc">吊灯尺寸、款式不对</div></div>
+        <div class="ci" data-k="furniture_added" onclick="this.classList.toggle('on')"><div class="ci-icon">🛋️</div><div class="ci-name">出现家具</div><div class="ci-desc">AI 自作主张放了软装</div></div>
+        <div class="ci" data-k="curtain_wrong" onclick="this.classList.toggle('on')"><div class="ci-icon">🪶</div><div class="ci-name">窗帘问题</div><div class="ci-desc">窗帘款式/长度不正确</div></div>
+      </div>
+
+      <div class="field" style="margin-bottom:16px;">
+        <label>补充说明（可选）</label>
+        <textarea id="corrNote" placeholder="如：右侧墙面材质颜色太深，需要调亮…" rows="2" style="width:100%;border:1px solid var(--border);background:var(--cream);border-radius:4px;padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink2);font-weight:300;outline:none;resize:none;"></textarea>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn btn-sec" onclick="goTo(1)">← 返回</button>
+        <button class="btn btn-pri" onclick="generateCorr()">生成修正指令</button>
+      </div>
+
+      <div class="corr-out" id="corrOut">
+        <div class="divider"></div>
+        <div class="out-card">
+          <div class="out-head">
+            <div class="out-title">迭代修正指令</div>
+            <div class="out-tag" id="corrTag">修正 #1</div>
+          </div>
+          <div class="out-body">
+            <div class="plabel">追加到 Gemini 上一条对话末尾</div>
+            <div class="pbox" id="corrBox"></div>
+            <div class="copy-row" style="margin-top:12px;">
+              <button class="cbtn p" onclick="copyCorr()">📋 复制修正指令</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-a -->
+</div><!-- /mod-a -->
+
+
+<!-- ══════════════════════════════════
+     MODULE B: SOFT FURNISHING MOODBOARD
+══════════════════════════════════ -->
+<div class="mod-panel" id="mod-b">
+  <div class="main-b">
+
+    <!-- LEFT CONTROLS -->
+    <div class="ctrl-panel">
+
+      <!-- Bridge Banner (shows when bg is passed from Module A) -->
+      <div class="bridge-banner" id="bridgeBanner" style="display:none">
+        <img id="bridgeThumb" class="bridge-thumb" alt="">
+        <div class="bridge-text">
+          <strong>✓ 硬装背景已导入</strong>
+          <p>已将硬装模块的空间图设为画布背景</p>
+        </div>
+        <button class="bridge-clear" onclick="clearBridgeBg()" title="移除背景">×</button>
+      </div>
+
+      <!-- 1. Assets -->
+      <div>
+        <div class="sec-title">1. 家具资产 (Assets)</div>
+        <div class="asset-zone" onclick="document.getElementById('assetInput').click()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin:0 auto;color:var(--accent);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          <p>点击或拖拽上传去背家具图</p>
+        </div>
+        <input type="file" id="assetInput" accept="image/*" multiple style="display:none" onchange="handleAssetUpload(event)">
+        <div class="prod-list" id="prodList" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- 2. Background Room -->
+      <div>
+        <div class="sec-title">2. 背景空间 (Background)</div>
+        <div class="bg-zone" id="bgZone" onclick="document.getElementById('bgInput').click()">
+          <div class="bg-zone-inner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--accent);"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <p>上传空房间背景图（可选）</p>
+            <p class="hint">建议正视角空房间照片</p>
+          </div>
+          <div class="bg-preview-row" id="bgPreviewRow">
+            <img id="bgThumb" alt="">
+            <span id="bgFileName"></span>
+            <button class="bg-use-btn" onclick="event.stopPropagation();applyBgToCanvas()">应用到画布</button>
+            <button class="bg-rm-btn" onclick="event.stopPropagation();removeBg()">×</button>
+          </div>
+        </div>
+        <input type="file" id="bgInput" accept="image/*" style="display:none" onchange="handleBgUpload(event)">
+      </div>
+
+      <!-- 3. Environment -->
+      <div>
+        <div class="sec-title">3. 场景约束 (Environment)</div>
+        <div class="fgroup" style="margin-bottom:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+            <label style="margin-bottom:0;">空间风格</label>
+            <button class="env-edit-btn" onclick="openEnvEditor('style')" title="管理风格">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              管理
+            </button>
+          </div>
+          <select id="envStyle"></select>
+        </div>
+        <div class="fgroup">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+            <label style="margin-bottom:0;">空间类型</label>
+            <button class="env-edit-btn" onclick="openEnvEditor('room')" title="管理类型">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              管理
+            </button>
+          </div>
+          <select id="envRoom"></select>
+        </div>
+      </div>
+
+      <!-- 4. Canvas Size -->
+      <div>
+        <div class="sec-title">4. 画幅尺寸 (Canvas Size)</div>
+        <div class="size-presets">
+          <div class="size-pill on" onclick="applyPreset(this,540,720)"><div class="size-pill-name">竖版</div><div class="size-pill-ratio">3 : 4</div></div>
+          <div class="size-pill" onclick="applyPreset(this,720,720)"><div class="size-pill-name">方形</div><div class="size-pill-ratio">1 : 1</div></div>
+          <div class="size-pill" onclick="applyPreset(this,720,540)"><div class="size-pill-name">横版</div><div class="size-pill-ratio">4 : 3</div></div>
+          <div class="size-pill" onclick="applyPreset(this,720,405)"><div class="size-pill-name">宽屏</div><div class="size-pill-ratio">16 : 9</div></div>
+          <div class="size-pill" onclick="applyPreset(this,540,810)"><div class="size-pill-name">小红书</div><div class="size-pill-ratio">2 : 3</div></div>
+          <div class="size-pill" onclick="applyPreset(this,960,720)"><div class="size-pill-name">提案横</div><div class="size-pill-ratio">4 : 3</div></div>
+        </div>
+        <div class="custom-size-row">
+          <input type="number" id="customW" placeholder="宽" min="200" max="1400" value="540">
+          <span>×</span>
+          <input type="number" id="customH" placeholder="高" min="200" max="1600" value="720">
+          <button class="custom-apply-btn" onclick="applyCustomSize()">自定义</button>
+        </div>
+      </div>
+
+      <button class="magic-btn" onclick="orchestrate()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+        生成 AI 渲染封包
+      </button>
+    </div>
+
+    <!-- RIGHT: CANVAS -->
+    <div class="canvas-container">
+      <div class="canvas-header" id="canvasHeader" style="width:540px;">
+        <div>
+          <h3>Spatial Sandbox</h3>
+          <p>拖拽调整位置 · 右下角缩放 · 点击置顶</p>
+        </div>
+        <span class="canvas-dim" id="canvasDimLabel">540 × 720</span>
+      </div>
+      <div style="overflow:auto;max-width:calc(100vw - 480px);">
+        <div class="canvas-wrap" id="renderCanvas" style="width:540px;height:720px;">
+          <div class="canvas-grid-layer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<canvas id="spriteCanvas"></canvas>
+
+<!-- Prompt Modal -->
+<div class="modal-overlay" id="promptModal">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <h2>Gemini 终极渲染指令</h2>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:14px;">
+        <strong>✅ 封包已生成！</strong> 两张参考图已自动下载。请将下载的 <b>2 张图片</b>拖入 Gemini，并复制以下提示词发送：
+      </p>
+      <div class="prompt-box" id="finalPromptText"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="cbtn s" onclick="closeModal()">关闭</button>
+      <button class="cbtn p" id="copyPromptBtn" onclick="copyPrompt()">复制提示词</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Env Editor Modal -->
+<div class="env-modal" id="envEditorModal">
+  <div class="env-modal-box">
+    <div class="env-modal-hd">
+      <h3 id="envEditorTitle">管理空间风格</h3>
+      <button class="env-modal-close" onclick="closeEnvEditor()">×</button>
+    </div>
+    <div class="env-item-list" id="envItemList"></div>
+    <div class="env-add-row">
+      <input type="text" id="envAddName" placeholder="新增名称，如：地中海风">
+      <button class="env-add-btn" onclick="addEnvItem()">+ 新增</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// GLOBAL
+// ══════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function switchMod(m) {
+  document.getElementById('mod-a').classList.toggle('on', m === 'a');
+  document.getElementById('mod-b').classList.toggle('on', m === 'b');
+  document.getElementById('mtab-a').classList.toggle('on', m === 'a');
+  document.getElementById('mtab-b').classList.toggle('on', m === 'b');
+}
+
+// ══════════════════════════════════
+// MODULE A — HARD DECO
+// ══════════════════════════════════
+let instrText = '';
+let corrCount = 0;
+
+// Dropzone setup
+function setupDz(zoneId, inputId, thumbId, ovId, okId) {
+  const zone = document.getElementById(zoneId);
+  const input = document.getElementById(inputId);
+  const thumb = document.getElementById(thumbId);
+  const ov = document.getElementById(ovId);
+  const ok = document.getElementById(okId);
+
+  input.addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      thumb.src = ev.target.result;
+      thumb.style.display = 'block';
+      ov.classList.add('on');
+      ok.textContent = '✓ ' + f.name;
+      zone.querySelector('.dz-icon') && (zone.querySelector('.dz-icon').style.display = 'none');
+      zone.querySelector('.dz-title') && (zone.querySelector('.dz-title').style.display = 'none');
+      zone.querySelector('.dz-sub') && (zone.querySelector('.dz-sub').style.display = 'none');
+    };
+    r.readAsDataURL(f);
+  });
+
+  ['dragenter','dragover'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove('drag'); }));
+  zone.addEventListener('drop', e => {
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) {
+      const dt = new DataTransfer();
+      dt.items.add(f);
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    }
+  });
+}
+
+setupDz('refZone','refInput','refThumb','refOv','refOk');
+setupDz('bareZone','bareInput','bareThumb','bareOv','bareOk');
+
+function goTo(n) {
+  document.querySelectorAll('.page').forEach((p,i) => p.classList.toggle('active', i === n));
+  document.querySelectorAll('.sn').forEach((s,i) => {
+    s.classList.toggle('active', i === n);
+    s.classList.toggle('done', i < n);
+  });
+}
+
+function generateHard() {
+  const room = document.getElementById('roomType').value;
+  const note = document.getElementById('extraNote').value.trim();
+  const focus = [...document.querySelectorAll('.pill.on')].map(p => p.textContent).join('、');
+  const structs = [...document.querySelectorAll('.spill.on')].map(s => s.dataset.v);
+  instrText = buildInstruction(room, note, focus, structs);
+  document.getElementById('instrBox').textContent = instrText;
+  document.getElementById('outCard').style.display = 'block';
+  setTimeout(() => document.getElementById('outCard').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+
+function buildInstruction(room, note, focus, structs) {
+  const structLines = {
+    beam:'- 门洞上方有结构横梁：在提示词中要求通过天花角线完全包覆消隐，零暴露',
+    column:'- 有独立结构柱：要求按参考风格进行石材/石膏全包覆处理',
+    step:'- 地面存在高差：保持原有高差位置，仅更换面层材质',
+    low:'- 层高偏低(<2.7m)：天花角线采用轻薄型(≤60mm)，避免压缩视觉层高',
+    beam_balcony:'- 阳台连接处有结构横梁：融入天花处理，不得暴露'
+  };
+  const structText = structs.length ? structs.map(s => structLines[s]||'').filter(Boolean).join('\n') : '无特殊结构';
+
+  return `你是顶级硬装设计师。我上传了两张图：
+【第一张】硬装参考效果图（目标风格）
+【第二张】毛坯房照片（待装修的实际空间）
+
+空间类型：${room}
+重点关注部位：${focus || '地面、背景墙、天花板、踢脚线'}
+${note ? '补充说明：' + note : ''}
+特殊结构：${structText}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+请完成以下分析，严格按格式输出：
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 风格标签
+列出5-6个关键词描述参考图风格
+
+## 硬装部位解析（来自参考图）
+逐一描述：地面 / 天花板 / 背景墙 / 其他墙面 / 踢脚线 / 结构细节
+每项包含：材质、规格、颜色、工艺、安装方式
+
+## 材质清单
+表格格式：部位 | 材质名称 | 规格/工艺说明
+
+## 毛坯房空间观察
+仔细观察第二张图，描述：
+- 层高（估算）、开间与进深
+- 逐面墙的洞口情况：背景墙/左墙/右墙/天花各有什么洞口，位置和尺寸
+- 梁柱情况
+- 地面状态
+
+## Gemini 英文提示词
+将毛坯房改造成参考图风格，250-320字，英文输出。
+严格按以下顺序包含所有模块：
+
+【PRIORITY ORDER】
+置于最顶部，声明：空间结构优先于风格参考，如有冲突以毛坯房照片为准
+
+【ABSOLUTE SPATIAL CONSTRAINTS】
+- 基于毛坯房空间观察，写明房间精确结构
+- 明确每面墙的状态（有无洞口）
+- 声明视角、比例、结构全部锁定，零结构变更
+
+【OPENING INVENTORY】
+- 逐一列出毛坯房中存在的每个洞口（墙面位置、类型、尺寸估算）
+- 每个洞口对应的风格处理方式
+- 明确写出无洞口的墙面：Zero openings. No door/window/arch permitted.
+- 最后加：Any opening not listed here is STRICTLY FORBIDDEN.
+
+【STYLE】风格定义（来自参考图）
+【FLOOR】地面材质规格工艺
+【CEILING】天花处理、角线规格、灯具（若有）
+【FEATURE WALL】背景墙系统
+【OTHER WALLS】其他墙面处理
+【SKIRTING】踢脚线
+【STRUCTURAL NOTES】${structText !== '无特殊结构' ? '处理以下特殊结构：'+structText : '无特殊结构需求，写 N/A'}
+
+【FORBIDDEN】
+- No walls, partitions or structural elements added
+- No openings except those listed in OPENING INVENTORY
+- No furniture of any kind
+- No cool grey tones (unless specified in style)
+- No exposed concrete
+- No watermarks or text
+- Do not alter room footprint, camera angle or spatial proportions`;
+}
+
+// Bridge: send ref image to moodboard as background
+function sendToMoodboard() {
+  const refThumb = document.getElementById('refThumb');
+  if (!refThumb.src || refThumb.style.display === 'none') {
+    showToast('请先上传参考图');
+    return;
+  }
+  // Set bridge bg
+  setBridgeBg(refThumb.src, '硬装参考图');
+  switchMod('b');
+  showToast('✓ 硬装参考图已传入软装模块');
+}
+
+const FIXES = {
+  extra_wall:`- EXTRA WALL: Remove ALL walls you added. This room has exactly the walls visible in the bare room photo — no more. The room boundary toward the camera is open space, NOT a wall surface.`,
+  extra_door:`- EXTRA DOOR: Remove every door not listed in OPENING INVENTORY. Only render doors at exact confirmed openings. Solid walls stay solid. No exceptions.`,
+  extra_window:`- EXTRA WINDOW: Remove every window not listed in OPENING INVENTORY. Do not cut new openings into any wall surface under any circumstance.`,
+  layout_changed:`- LAYOUT LOCKED: You changed the room structure. Revert to the exact spatial layout of the bare room photo — same camera angle, same wall positions, same proportions. Only surface finishes change.`,
+  color_cold:`- WALL COLOR TOO COOL: Entire palette must shift warmer. Target: oat/greige with warm yellow undertone. Reference: Farrow & Ball "Elephant's Breath" or "Joa's White". Remove all cool grey tones completely.`,
+  panel_low:`- WAINSCOTING HEIGHT: Lower wall panels must be exactly 900mm tall. Current render is too low. Increase to occupy approximately 35-40% of total wall height.`,
+  molding_thin:`- MOLDING DEPTH: Crown molding and door architraves must show THREE clearly stepped layers. Total width 100-120mm. They must appear thick and three-dimensional with visible relief — not a single thin line.`,
+  window_wrong:`- WINDOW TYPE: Adjust window style to match reference image. Retain original opening dimensions exactly. Only the frame style changes — do not alter opening size or position.`,
+  beam_visible:`- BEAM CONCEALMENT: The structural beam above the doorway must be 100% concealed within the ceiling crown molding system. Treat it as part of the ceiling plane. Zero exposed beam surface.`,
+  chandelier_wrong:`- CHANDELIER: Render exactly ONE chandelier centered on ceiling. Diameter 900-1000mm, antique brass frame, translucent mica or linen panels. Large and commanding. No additional light fixtures anywhere.`,
+  furniture_added:`- NO FURNITURE: This is a hard decoration visualization. Remove ALL furniture — sofas, chairs, tables, rugs, plants, decorative objects. Empty room only.`,
+  curtain_wrong:`- CURTAINS: Floor-length curtains hung from ceiling height (crown molding level) to floor. Warm oat/greige/linen tone. Soft gathered folds. No short curtains, no patterned fabric.`
+};
+
+function generateCorr() {
+  const keys = [...document.querySelectorAll('.ci.on')].map(el => el.dataset.k);
+  const note = document.getElementById('corrNote').value.trim();
+  if (!keys.length && !note) { showToast('请至少勾选一个问题'); return; }
+  corrCount++;
+  let lines = keys.map(k => FIXES[k]||'').filter(Boolean).join('\n\n');
+  if (note) lines += `\n\n- ADDITIONAL: ${note}`;
+  const out = `\n\n${'═'.repeat(47)}\nCORRECTIONS — ITERATION #${corrCount} — STRICTLY ENFORCE ALL\n${'═'.repeat(47)}\n${lines}\n${'═'.repeat(47)}\nRe-render the complete room applying ALL corrections above\nwhile keeping every other element unchanged.`;
+  document.getElementById('corrBox').textContent = out;
+  document.getElementById('corrTag').textContent = `修正 #${corrCount}`;
+  document.getElementById('corrOut').classList.add('show');
+  setTimeout(() => document.getElementById('corrOut').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+}
+
+function copyInstr() { navigator.clipboard.writeText(instrText).then(() => showToast('✓ 分析指令已复制')); }
+function copyCorr() { navigator.clipboard.writeText(document.getElementById('corrBox').textContent).then(() => showToast('✓ 修正指令已复制')); }
+
+// ══════════════════════════════════
+// ENV DATA & EDITOR
+// ══════════════════════════════════
+let envData = {
+  style: [
+    { name:'法式清新', prompt:'Modern French / Parisian, bright airy, elegant, cream and white tones' },
+    { name:'意式优雅', prompt:'Italian Elegance, travertine, warm amber lighting, luxury' },
+    { name:'奶油侘寂', prompt:'Japandi Wabi-sabi, rough plaster, raw linen, minimal' },
+    { name:'新中式',   prompt:'New Chinese (新中式), ink-wash tones, dark walnut, soft stone' },
+    { name:'现代简约', prompt:'Modern Minimalist, pure white walls, hidden lighting, clean lines' },
+    { name:'高级暗黑', prompt:'Dark Moody Luxury, charcoal walls, dramatic spotlights' },
+  ],
+  room: [
+    { name:'客厅',  prompt:'Living Room' },
+    { name:'卧室',  prompt:'Bedroom' },
+    { name:'餐厅',  prompt:'Dining Room' },
+    { name:'书房',  prompt:'Study / Home Office' },
+  ]
+};
+
+let envEditing = 'style'; // current editor target
+
+function rebuildSelects() {
+  ['style','room'].forEach(type => {
+    const sel = document.getElementById(type === 'style' ? 'envStyle' : 'envRoom');
+    const cur = sel.value;
+    sel.innerHTML = envData[type].map(item =>
+      `<option value="${escHtml(item.prompt)}">${escHtml(item.name)}</option>`
+    ).join('');
+    // Try to restore selection
+    if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+  });
+}
+
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function openEnvEditor(type) {
+  envEditing = type;
+  document.getElementById('envEditorTitle').textContent = type === 'style' ? '管理空间风格' : '管理空间类型';
+  renderEnvList();
+  document.getElementById('envEditorModal').classList.add('on');
+}
+
+function closeEnvEditor() {
+  document.getElementById('envEditorModal').classList.remove('on');
+  document.getElementById('envAddName').value = '';
+}
+
+function renderEnvList() {
+  const list = document.getElementById('envItemList');
+  const items = envData[envEditing];
+  list.innerHTML = items.map((item, i) => `
+    <div class="env-item" id="envitem_${i}">
+      <div class="env-item-head" onclick="toggleEnvItem(${i})">
+        <span class="env-item-name">${escHtml(item.name)}</span>
+        <div class="env-item-actions">
+          <button class="env-ia" onclick="event.stopPropagation();toggleEnvItem(${i})" title="编辑">✏️</button>
+          <button class="env-ia del" onclick="event.stopPropagation();deleteEnvItem(${i})" title="删除">×</button>
+        </div>
+      </div>
+      <div class="env-item-body" id="envbody_${i}">
+        <input type="text" id="envname_${i}" value="${escHtml(item.name)}" placeholder="显示名称">
+        <textarea id="envprompt_${i}" placeholder="Prompt（英文）">${escHtml(item.prompt)}</textarea>
+        <button class="env-item-save" onclick="saveEnvItem(${i})">保存</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleEnvItem(i) {
+  const body = document.getElementById('envbody_' + i);
+  body.classList.toggle('open');
+}
+
+function saveEnvItem(i) {
+  const name = document.getElementById('envname_' + i).value.trim();
+  const prompt = document.getElementById('envprompt_' + i).value.trim();
+  if (!name || !prompt) { showToast('名称和 Prompt 不能为空'); return; }
+  envData[envEditing][i] = { name, prompt };
+  rebuildSelects();
+  renderEnvList();
+  showToast('✓ 已保存');
+}
+
+function deleteEnvItem(i) {
+  if (envData[envEditing].length <= 1) { showToast('至少保留一个选项'); return; }
+  envData[envEditing].splice(i, 1);
+  rebuildSelects();
+  renderEnvList();
+}
+
+function addEnvItem() {
+  const name = document.getElementById('envAddName').value.trim();
+  if (!name) { showToast('请输入名称'); return; }
+  const defaultPrompt = envEditing === 'style'
+    ? `${name} interior style, elegant, photorealistic`
+    : name;
+  envData[envEditing].push({ name, prompt: defaultPrompt });
+  rebuildSelects();
+  renderEnvList();
+  document.getElementById('envAddName').value = '';
+  // Auto-open the new item for editing
+  setTimeout(() => {
+    const idx = envData[envEditing].length - 1;
+    document.getElementById('envbody_' + idx)?.classList.add('open');
+    document.getElementById('envItemList').scrollTop = 9999;
+  }, 50);
+  showToast('✓ 已新增，请填写 Prompt');
+}
+
+// Init selects on load
+document.addEventListener('DOMContentLoaded', rebuildSelects);
+
+// ══════════════════════════════════
+// MODULE B — SOFT FURNISHING
+// ══════════════════════════════════
+let prods = [];
+let zCounter = 100;
+let CW = 540, CH = 720;
+let bgSrc = null;
+
+// ── Canvas Size Control ──
+function applyPreset(el, w, h) {
+  document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('customW').value = w;
+  document.getElementById('customH').value = h;
+  resizeCanvas(w, h);
+}
+
+function applyCustomSize() {
+  const w = Math.max(200, Math.min(1400, parseInt(document.getElementById('customW').value)||540));
+  const h = Math.max(200, Math.min(1600, parseInt(document.getElementById('customH').value)||720));
+  document.getElementById('customW').value = w;
+  document.getElementById('customH').value = h;
+  document.querySelectorAll('.size-pill').forEach(p => p.classList.remove('on'));
+  resizeCanvas(w, h);
+}
+
+function resizeCanvas(w, h) {
+  CW = w; CH = h;
+  const cvs = document.getElementById('renderCanvas');
+  cvs.style.width = w + 'px';
+  cvs.style.height = h + 'px';
+  document.getElementById('canvasHeader').style.width = Math.max(w, 200) + 'px';
+  document.getElementById('canvasDimLabel').textContent = w + ' × ' + h;
+  showToast(`画幅已更新：${w} × ${h}`);
+}
+
+// Background handlers
+function handleBgUpload(e) {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    bgSrc = ev.target.result;
+    document.getElementById('bgThumb').src = bgSrc;
+    document.getElementById('bgFileName').textContent = f.name;
+    document.getElementById('bgPreviewRow').style.display = 'flex';
+  };
+  r.readAsDataURL(f);
+  e.target.value = '';
+}
+
+function applyBgToCanvas() {
+  if (!bgSrc) return;
+  addBgItem(bgSrc);
+  showToast('✓ 背景图已添加到画布，可自由拖拽缩放');
+}
+
+function addBgItem(src) {
+  // Remove existing bg item if any
+  const existing = document.getElementById('bg-canvas-item');
+  if (existing) existing.remove();
+
+  const wrap = document.getElementById('renderCanvas');
+  const el = document.createElement('div');
+  el.className = 'bg-item';
+  el.id = 'bg-canvas-item';
+  // Start filling the canvas
+  el.style.cssText = `width:${CW}px;height:${CH}px;left:0;top:0;`;
+  el.setAttribute('data-x', 0);
+  el.setAttribute('data-y', 0);
+  el.innerHTML = `<img src="${src}" alt="background"><div class="bg-resize-handle"></div><div class="bg-item-label">BG</div>`;
+  // Insert as first child so it's behind everything
+  wrap.insertBefore(el, wrap.firstChild);
+
+  // Init interact for bg item
+  interact('#bg-canvas-item')
+    .draggable({
+      listeners: {
+        start(e) {
+          document.querySelectorAll('.canvas-item').forEach(i => i.classList.remove('active'));
+          document.querySelectorAll('.bg-item').forEach(i => i.classList.remove('active'));
+          e.target.classList.add('active');
+        },
+        move(e) {
+          const t = e.target;
+          const x = (parseFloat(t.getAttribute('data-x'))||0) + e.dx;
+          const y = (parseFloat(t.getAttribute('data-y'))||0) + e.dy;
+          t.style.left = x + 'px';
+          t.style.top = y + 'px';
+          t.setAttribute('data-x', x);
+          t.setAttribute('data-y', y);
+        }
+      }
+    })
+    .resizable({
+      edges: { right: '.bg-resize-handle', bottom: '.bg-resize-handle' },
+      listeners: {
+        move(e) {
+          e.target.style.width = e.rect.width + 'px';
+          e.target.style.height = e.rect.height + 'px';
+        }
+      }
+    });
+}
+
+function removeBg() {
+  bgSrc = null;
+  document.getElementById('bgInput').value = '';
+  document.getElementById('bgThumb').src = '';
+  document.getElementById('bgFileName').textContent = '';
+  document.getElementById('bgPreviewRow').style.display = 'none';
+  const existing = document.getElementById('bg-canvas-item');
+  if (existing) existing.remove();
+}
+
+function clearCanvasBg() {
+  const existing = document.getElementById('bg-canvas-item');
+  if (existing) existing.remove();
+}
+
+// Bridge from Module A
+function setBridgeBg(src, name) {
+  bgSrc = src;
+  const banner = document.getElementById('bridgeBanner');
+  const bt = document.getElementById('bridgeThumb');
+  banner.style.display = 'flex';
+  bt.src = src;
+  bt.classList.add('show');
+  addBgItem(src);
+  document.getElementById('bgThumb').src = src;
+  document.getElementById('bgFileName').textContent = name;
+  document.getElementById('bgPreviewRow').style.display = 'flex';
+}
+
+function clearBridgeBg() {
+  document.getElementById('bridgeBanner').style.display = 'none';
+  removeBg();
+}
+
+// Asset upload
+function handleAssetUpload(e) {
+  Array.from(e.target.files).forEach((file, i) => {
+    const r = new FileReader();
+    r.onload = ev => {
+      const id = 'item_' + Date.now() + i;
+      const p = { id, name: file.name.replace(/\.[^.]+$/,''), type: 'sofa', src: ev.target.result,
+        x: 80 + (prods.length * 35 % 200), y: 180 + (prods.length * 45 % 300), w: 180, z: zCounter++ };
+      prods.push(p);
+      renderProdList();
+      addCanvasItem(p);
+    };
+    r.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+const TYPES = [
+  { val:'sofa', label:'沙发 Sofa' },
+  { val:'chair', label:'椅子 Chair' },
+  { val:'table', label:'桌子 Table' },
+  { val:'bed', label:'床 Bed' },
+  { val:'cabinet', label:'柜子 Cabinet' },
+  { val:'rug', label:'地毯 Rug' },
+  { val:'chandelier light', label:'吊灯 Chandelier' },
+  { val:'floor lamp light', label:'落地灯 Floor Lamp' },
+  { val:'art painting', label:'挂画 Art' },
+  { val:'mirror', label:'镜子 Mirror' },
+  { val:'plant', label:'植物 Plant' },
+  { val:'person model', label:'人物模特 Model' },
+  { val:'decoration', label:'装饰品 Decor' },
+];
+
+function typeOptions(current) {
+  return TYPES.map(t => `<option value="${t.val}" ${t.val===current?'selected':''}>${t.label}</option>`).join('');
+}
+
+function renderProdList() {
+  const list = document.getElementById('prodList');
+  list.innerHTML = '';
+  prods.forEach(p => {
+    list.innerHTML += `
+      <div class="prod-item">
+        <img src="${p.src}">
+        <div class="prod-meta">
+          <input type="text" value="${p.name}" onchange="updateProd('${p.id}','name',this.value)" placeholder="名称">
+          <select onchange="updateProd('${p.id}','type',this.value)">${typeOptions(p.type)}</select>
+        </div>
+        <button class="prod-del" onclick="removeProd('${p.id}')">×</button>
+      </div>`;
+  });
+}
+
+function updateProd(id, key, val) { const p = prods.find(x=>x.id===id); if(p) p[key]=val; }
+
+function removeProd(id) {
+  prods = prods.filter(x=>x.id!==id);
+  renderProdList();
+  const el = document.getElementById(id);
+  if(el) el.remove();
+}
+
+function addCanvasItem(p) {
+  const wrap = document.getElementById('renderCanvas');
+  const el = document.createElement('div');
+  el.className = 'canvas-item';
+  el.id = p.id;
+  el.style.cssText = `width:${p.w}px;z-index:${p.z};transform:translate(${p.x}px,${p.y}px);`;
+  el.setAttribute('data-x', p.x);
+  el.setAttribute('data-y', p.y);
+  el.innerHTML = `<img src="${p.src}"><div class="resize-handle"></div>`;
+  wrap.appendChild(el);
+}
+
+// Interact.js
+interact('.canvas-item')
+  .draggable({
+    modifiers:[interact.modifiers.restrictRect({restriction:'parent',endOnly:true})],
+    listeners:{
+      start(e){
+        document.querySelectorAll('.canvas-item').forEach(el=>el.classList.remove('active'));
+        e.target.classList.add('active');
+        e.target.style.zIndex = zCounter++;
+      },
+      move(e){
+        const t = e.target;
+        const x = (parseFloat(t.getAttribute('data-x'))||0)+e.dx;
+        const y = (parseFloat(t.getAttribute('data-y'))||0)+e.dy;
+        t.style.transform = `translate(${x}px,${y}px)`;
+        t.setAttribute('data-x',x); t.setAttribute('data-y',y);
+      }
+    }
+  })
+  .resizable({
+    edges:{right:'.resize-handle',bottom:'.resize-handle'},
+    modifiers:[interact.modifiers.aspectRatio({ratio:'preserve'})],
+    listeners:{move(e){e.target.style.width=e.rect.width+'px';}}
+  });
+
+document.addEventListener('pointerdown', e => {
+  if(!e.target.closest('.canvas-item') && !e.target.closest('.bg-item') && !e.target.closest('.ctrl-panel')) {
+    document.querySelectorAll('.canvas-item').forEach(el=>el.classList.remove('active'));
+    document.querySelectorAll('.bg-item').forEach(el=>el.classList.remove('active'));
+  }
+});
+
+// Orchestration
+async function orchestrate() {
+  if(!prods.length){ showToast('请先上传家具图'); return; }
+  document.querySelectorAll('.canvas-item').forEach(el=>el.classList.remove('active'));
+  const cvs = document.getElementById('renderCanvas');
+  const layout = await html2canvas(cvs,{scale:1.5,useCORS:true});
+  dlCanvas(layout,'1_Layout_Reference.png');
+  await buildSpriteSheet();
+  const prompt = buildPrompt();
+  document.getElementById('finalPromptText').textContent = prompt;
+  document.getElementById('promptModal').classList.add('on');
+}
+
+function dlCanvas(canvas, name) {
+  const a = document.createElement('a'); a.download=name; a.href=canvas.toDataURL('image/png'); a.click();
+}
+
+async function buildSpriteSheet() {
+  const cols = Math.ceil(Math.sqrt(prods.length));
+  const rows = Math.ceil(prods.length/cols);
+  const cs=400,gap=20;
+  const cvs = document.getElementById('spriteCanvas');
+  cvs.width = cols*cs+(cols+1)*gap;
+  cvs.height = rows*(cs+60)+(rows+1)*gap;
+  const ctx = cvs.getContext('2d');
+  ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,cvs.width,cvs.height);
+
+  for(let i=0;i<prods.length;i++){
+    const p=prods[i];
+    const col=i%cols, row=Math.floor(i/cols);
+    const x=gap+col*(cs+gap), y=gap+row*(cs+60+gap);
+    ctx.strokeStyle='#EEEEEE'; ctx.lineWidth=2; ctx.strokeRect(x,y,cs,cs);
+    const img=new Image(); img.src=p.src;
+    await new Promise(r=>{img.onload=r;});
+    const sc=Math.min((cs-40)/img.width,(cs-40)/img.height);
+    const dw=img.width*sc,dh=img.height*sc;
+    ctx.drawImage(img,x+(cs-dw)/2,y+(cs-dh)/2,dw,dh);
+    ctx.fillStyle='#3D2E28'; ctx.beginPath(); ctx.arc(x+30,y+30,20,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#FFFFFF'; ctx.font='bold 20px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(i+1,x+30,y+30);
+    ctx.fillStyle='#2C2825'; ctx.font='bold 16px sans-serif';
+    ctx.fillText(`[${i+1}] ${p.name}`,x+cs/2,y+cs+22);
+    ctx.fillStyle='#8A857D'; ctx.font='13px sans-serif';
+    ctx.fillText(p.type,x+cs/2,y+cs+44);
+  }
+  dlCanvas(cvs,'2_Asset_SpriteSheet.png');
+}
+
+function buildPrompt() {
+  const style = document.getElementById('envStyle').value;
+  const room = document.getElementById('envRoom').value;
+  const hasBg = document.getElementById('canvasBgImg').style.display !== 'none';
+  let rules = '';
+
+  prods.forEach((p,idx) => {
+    const el = document.getElementById(p.id);
+    const x = parseFloat(el.getAttribute('data-x'));
+    const y = parseFloat(el.getAttribute('data-y'));
+    const w = parseFloat(el.style.width);
+    const h = el.offsetHeight;
+    const cx = x+(w/2), cy = y+(h/2);
+
+    let hPos = 'Center';
+    if(cx < CW*0.38) hPos='Left side';
+    else if(cx > CW*0.62) hPos='Right side';
+
+    let vPos = 'Midground';
+    if(cy < CH*0.45) vPos='Background (further away)';
+    else if(cy > CH*0.65) vPos='Foreground (closest to camera)';
+
+    const c = (p.type+' '+p.name).toLowerCase();
+    let place='';
+    if(c.includes('light')||c.includes('chandelier')) place=`Hanging strictly from the ceiling, above the ${hPos} area.`;
+    else if(c.includes('rug')||c.includes('carpet')) place=`Lying flat on the floor in the ${hPos}, absolute base layer.`;
+    else if(c.includes('art')||c.includes('painting')||c.includes('mirror')) place=`Mounted on the wall in the ${hPos}, at eye-level.`;
+    else if(c.includes('person')||c.includes('model')) place=`Standing on the floor in the ${hPos}, ${vPos}. (Use as absolute scale reference for all furniture).`;
+    else place=`Placed on the floor in the ${hPos}, ${vPos}.`;
+
+    rules += `- [Asset ${idx+1}] ${p.name} (${p.type}): ${place}\n`;
+  });
+
+  const bgNote = hasBg
+    ? `IMAGE 3 [Background Room]: A real room photo is provided as the background canvas. Use it as the spatial and architectural reference for the room structure, perspective, and lighting direction.`
+    : '';
+
+  return `I am providing ${hasBg?'THREE':'TWO'} reference images to generate a highly realistic, photorealistic 3D interior render.
+
+IMAGE 1 [1_Layout_Reference.png]: The 2D structural composition. Use as STRICT spatial blueprint.
+IMAGE 2 [2_Asset_SpriteSheet.png]: Numbered visual assets. Use exact design, color, and material. DO NOT invent furniture.
+${bgNote}
+
+================================================================
+ENVIRONMENT & MOOD
+================================================================
+- Room Type: ${room}
+- Interior Style & Lighting: ${style}
+- Camera: Eye-level perspective, interior architectural photography, 85mm lens, photorealistic with global illumination and soft ambient occlusion.
+
+================================================================
+SEMANTIC SPATIAL TOPOLOGY (Do not deviate)
+================================================================
+${rules}
+================================================================
+PHYSICS, SCALE & PERSPECTIVE
+================================================================
+- PERSPECTIVE: Correct all perspective distortions so ALL objects share a single unified 3D vanishing point.
+- ERGONOMIC SCALE: Chair seat ~45cm, dining table ~75cm high. If human model present, scale all furniture relative to her.
+- GRAVITY: Floor items touch floor. Ceiling items hang from ceiling. NO floating objects.
+
+GENERATE THE PHOTOREALISTIC 3D RENDER NOW.`;
+}
+
+function closeModal() { document.getElementById('promptModal').classList.remove('on'); }
+function copyPrompt() {
+  navigator.clipboard.writeText(document.getElementById('finalPromptText').textContent).then(() => {
+    const btn = document.getElementById('copyPromptBtn');
+    btn.textContent = '已复制 ✓'; btn.style.background='#2d6a4f';
+    setTimeout(()=>{btn.textContent='复制提示词';btn.style.background='';},2000);
+  });
+}
+</script>
+</body>
+</html>
